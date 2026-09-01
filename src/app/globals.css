@@ -1,0 +1,69 @@
+@import "tailwindcss";
+
+@theme {
+  --color-brand: #fce000;
+  --color-brand-soft: #fff7c2;
+  --color-ink: #17181c;
+  --color-ink-soft: #5c5f66;
+  --color-surface: #ffffff;
+  --color-surface-dim: #f4f4f6;
+  --color-positive: #1f9d55;
+  --color-warning: #d97706;
+  --color-danger: #dc2626;
+  --color-info: #2563eb;
+  --color-route-b: #7c7f87;
+
+  --font-sans: "Manrope", ui-sans-serif, system-ui, -apple-system, "Segoe UI",
+    Roboto, "Helvetica Neue", Arial, sans-serif;
+
+  --shadow-card: 0 8px 24px rgba(23, 24, 28, 0.08);
+  --shadow-float: 0 12px 32px rgba(23, 24, 28, 0.16);
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  background-color: var(--color-surface-dim);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* MapLibre chrome tuned to the design system */
+.maplibregl-ctrl-attrib {
+  font-size: 10px;
+}
+.maplibregl-popup-content {
+  border-radius: 16px;
+  box-shadow: var(--shadow-card);
+}
+
+/* Range slider (tradeoff control) */
+input[type="range"].qm-slider {
+  appearance: none;
+  width: 100%;
+  height: 6px;
+  border-radius: 9999px;
+  background: linear-gradient(to right, var(--color-ink), var(--color-brand));
+  outline-offset: 4px;
+}
+input[type="range"].qm-slider::-webkit-slider-thumb {
+  appearance: none;
+  width: 22px;
+  height: 22px;
+  border-radius: 9999px;
+  background: var(--color-surface);
+  border: 3px solid var(--color-ink);
+  cursor: pointer;
+}
+input[type="range"].qm-slider::-moz-range-thumb {
+  width: 22px;
+  height: 22px;
+  border-radius: 9999px;
+  background: var(--color-surface);
+  border: 3px solid var(--color-ink);
+  cursor: pointer;
+}

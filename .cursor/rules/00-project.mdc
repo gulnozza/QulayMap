@@ -1,0 +1,35 @@
+---
+description: QulayMap core project rules — always apply
+alwaysApply: true
+---
+
+# QulayMap — Project Rules
+
+You are building **QulayMap Uzbekistan**, a civic mapping + route-planning platform. Full context lives in `docs/`. Read `docs/00-PRODUCT-BRIEF.md` before implementing any feature.
+
+## Non-negotiable product rules
+1. **Never** generate copy that claims a route or place is "safe" or "accessible" as an absolute. Use "better matched to your selected conditions" and always surface data source, observed date, and trust state.
+2. Every map feature shown to users must display its `trust_state` and `observed_at`.
+3. The browser never decides permissions. All authorization happens in route handlers + Supabase RLS.
+4. Hard-avoid layers remove/infinite-cost edges; soft preferences adjust cost. Never silently reorder routes without an explanation string.
+5. All user-facing strings go through the i18n dictionary (`src/lib/i18n/`). Languages: `uz` (default), `ru`, `en`. Never hardcode UI text in components.
+
+## Stack (do not substitute)
+- Next.js 15, App Router, TypeScript strict mode, `src/` dir, `@/*` alias
+- Tailwind CSS v4 with tokens from `docs/01-DESIGN-SYSTEM.md`
+- Supabase: `@supabase/ssr` for server clients, `@supabase/supabase-js` for browser
+- MapLibre GL JS for all maps (never Google Maps / Mapbox GL v2+ proprietary)
+- Zod at every API boundary
+- TanStack Query for client fetching; prefer Server Components for reads
+
+## Code conventions
+- TypeScript strict. No `any`. Domain types come from `src/types/domain.ts` — extend there, don't inline.
+- API route handlers: parse with Zod → authenticate → authorize → domain logic → typed JSON response. In that order, always.
+- Errors: return `{ error: { code, message } }` with correct HTTP status. Never leak internal errors to clients.
+- Server-only secrets (`SUPABASE_SERVICE_ROLE_KEY`) never appear in client components or `NEXT_PUBLIC_*` vars.
+- Geometry: PostGIS SRID 4326, GeoJSON on the wire, `[lng, lat]` order everywhere.
+- Every migration in `supabase/migrations/` is append-only. Never edit an applied migration; write a new one.
+- Commit style: conventional commits (`feat:`, `fix:`, `docs:`, `test:`, `chore:`).
+
+## When unsure
+Check `docs/04-API-SPEC.md` for endpoint contracts and `docs/03-DATABASE.md` for schema before inventing new tables or routes. If a feature isn't in `docs/06-BUILD-PLAN.md`, ask before building it.

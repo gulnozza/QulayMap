@@ -1,0 +1,36 @@
+{
+  "name": "qulaymap",
+  "version": "0.1.0",
+  "description": "Community-owned mapping and route-planning platform for Uzbekistan",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit",
+    "generate:graph": "tsx scripts/generate-demo-graph.ts",
+    "seed": "tsx scripts/seed.ts"
+  },
+  "keywords": [],
+  "author": "gulnozza",
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "@supabase/supabase-js": "^2.112.4",
+    "maplibre-gl": "^6.6.0",
+    "next": "^15.5.25",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
+    "zod": "^4.5.4"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4.3.3",
+    "@types/node": "^26.4.0",
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.5",
+    "tailwindcss": "^4.3.3",
+    "tsx": "^4.23.13",
+    "typescript": "5.9",
+    "vitest": "^4.1.11"
+  }
+}

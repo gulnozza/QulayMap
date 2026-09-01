@@ -1,0 +1,51 @@
+---
+description: API, database, and security rules
+globs: ["src/app/api/**", "src/lib/**", "supabase/**"]
+alwaysApply: false
+---
+
+# Backend Rules
+
+## Route handler template (follow this shape for every endpoint)
+```ts
+export async function POST(req: Request) {
+  // 1. Parse + validate
+  const body = SubmissionCreateSchema.safeParse(await req.json());
+  if (!body.success) return jsonError(400, "invalid_payload", body.error);
+
+  // 2. Authenticate
+  const supabase = await createServerClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return jsonError(401, "unauthenticated");
+
+  // 3. Authorize (role/membership checks in src/lib/permissions.ts)
+  // 4. Domain logic (pure functions in src/lib/)
+  // 5. Persist via Supabase (RLS is the backstop, not the only check)
+  // 6. Return typed JSON
+}
+```
+
+## Database
+- Schema of record: `supabase/migrations/`. Documented in `docs/03-DATABASE.md`.
+- Every geometry column gets a GiST index.
+- JSONB `properties` only for category-specific attributes; relationships are relational columns.
+- Moderation actions append to `audit_log` — never overwrite state silently.
+- Submission state machine: `draft → submitted → under_review → approved → published`, plus `rejected` and `published → needs_recheck → under_review`. Enforce transitions in `src/lib/moderation.ts`; reject illegal jumps.
+
+## RLS invariants (test these)
+- Anyone reads public collections + published features.
+- Authenticated users create submissions attributed to themselves only.
+- Only org members with `reviewer`/`admin` role update submissions for that org's collections.
+- Only org `admin` creates layers or invites reviewers.
+- `visibility = 'private'` features never appear in public queries.
+
+## Routing engine
+- Lives in `src/lib/routing/` as pure, unit-testable functions. No I/O inside the algorithm.
+- Graph loading (DB → adjacency structure) is a separate adapter.
+- Every returned route includes an `explanation` object: avoided edges, matched preference coverage %, data freshness summary.
+
+## Security
+- Rate-limit submission + route endpoints (simple token bucket per user/IP).
+- Strip EXIF from uploaded images server-side before storage publication.
+- Validate uploaded file types by magic bytes, not extension.
+- No PII in logs.

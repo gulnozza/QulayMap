@@ -1,0 +1,34 @@
+---
+description: Frontend, design system, and accessibility rules
+globs: ["src/app/**", "src/components/**"]
+alwaysApply: false
+---
+
+# Frontend Rules
+
+## Design system (Yandex-Go-inspired — see docs/01-DESIGN-SYSTEM.md)
+- Brand yellow `#FCE000` for hero surfaces, CTAs, and marketing panels. Near-black `#17181C` for text on yellow.
+- Content sits on white rounded cards (`rounded-3xl`, 24px) floating over yellow or map surfaces.
+- Service/collection tiles: white rounded squares in a responsive grid, icon top, label below — like a super-app home screen.
+- Search is a pill (`rounded-full`) with a leading icon and a trailing action chip ("Where to?" pattern).
+- Typography: heavy, tight headlines (`font-extrabold tracking-tight`); generous whitespace; sentence case.
+- Motion: subtle scale on press (`active:scale-[0.98]`), 150–200ms transitions, no gratuitous animation.
+- Use design tokens from `tailwind` theme config only. Never hardcode hex values in components.
+
+## Accessibility (this is an accessibility product — hold the bar)
+- All interactive elements keyboard-reachable, visible focus rings (`focus-visible:ring-2 ring-black`).
+- Color contrast ≥ 4.5:1 for text. Yellow backgrounds always pair with near-black text.
+- Trust states use icon + text, never color alone.
+- MapLibre canvas gets an accessible fallback: place lists mirror map content.
+- Forms: label every input, `aria-describedby` for errors, error text announced via `role="alert"`.
+- Test with keyboard-only navigation before marking any page done.
+
+## Components
+- Reusable primitives in `src/components/ui/` (Button, Card, Chip, Badge, Sheet, Field).
+- Map code isolated in `src/components/map/` — MapLibre never imported outside it.
+- Route UI in `src/components/routing/` — controls grouped as "Must avoid" / "Prefer" / "Show on map".
+- Every data component handles loading, empty, and error states explicitly. No spinner-only pages.
+
+## i18n
+- `src/lib/i18n/dictionaries/{uz,ru,en}.ts` — typed dictionary objects, `uz` is the source of truth.
+- Dates/distances localized. Distances in meters/km.
